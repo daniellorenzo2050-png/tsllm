@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TS-LLM Advanced Engine</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="website/styles/style.css">
+
+    <script src="https://unpkg.com/localforage@1.10.0/dist/localforage.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script src="website/llm/rede-neurais.js" defer></script>
+    <script src="website/tags/script-ts.js" defer></script>
+    <script src="website/scripts/script.js" defer></script>
+</head>
+<body>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">⚡ TS-LLM Engine</div>
+            </div>
+            <div class="memory-status">
+                <h3>ESTADO DO INDEXEDDB</h3>
+                <div class="status-card">
+                    <p>Banco: <span class="highlight">ts_llm_database</span></p>
+                    <p>Memória: <span id="memoryCount">0 nós carregados</span></p>
+                    <p>Modo: <span class="highlight-green">Rede Neural Local</span></p>
+                </div>
+            </div>
+            <div class="sidebar-footer">
+                <button id="clearMemoryBtn" class="btn-secondary">Resetar Sinapses</button>
+            </div>
+        </aside>
+
+        <main class="chat-area">
+            <header class="main-header">
+                <div class="model-info">
+                    <h2>Modelo Adaptativo v3.0.4</h2>
+                    <p>Processamento de Linguagem Natural Baseado em Redes de Associação</p>
+                </div>
+                <div class="pulse-container">
+                    <span class="pulse-dot"></span> Synapse Ativa
+                </div>
+            </header>
+
+            <div class="chat-box" id="chatBox">
+                <div class="message system-msg">
+                    <div class="avatar">⚡</div>
+                    <div class="bubble">Sistema e base de dados IndexedDB sincronizados. Pergunte algo, faça cálculos ou ensine novos termos para a rede.</div>
+                </div>
+            </div>
+
+            <footer class="input-container">
+                <div class="input-wrapper">
+                    <input type="text" id="userInput" placeholder="Envie um comando ou ensine algo..." autocomplete="off">
+                    <button id="sendBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script-ts>
+        // Definições Estritas de Tipagem (TypeScript Avançado)
+        interface NeuralInput {
+            rawText: string;
+            tokens: string[];
+        }
+
+        interface ExecutionResult {
+            output: string;
+            learnedNodes: number;
+            type: string;
+        }
+
+        // Camada Intermediária TypeScript para Validação e Ajuste de Hiperparâmetros
+        class TSNeuralGateway {
+            private systemName: string = "TS-LLM Pro Core";
+
+            public processAndRoute(input: string): ExecutionResult {
+                const cleaned = input.trim();
+                const tokens = cleaned.toLowerCase().split(/\s+/);
+                
+                // Comunicação Direta com o Core Heurístico Javascript da Rede Neural
+                if ((window as any).NeuralNetworkCore) {
+                    const netResponse = (window as any).NeuralNetworkCore.activate(cleaned, tokens);
+                    return {
+                        output: netResponse.answer,
+                        learnedNodes: netResponse.nodesSize,
+                        type: netResponse.type
+                    };
+                }
+
+                return {
+                    output: "Erro de barramento: Rede Neural não localizada.",
+                    learnedNodes: 0,
+                    type: "error"
+                };
+            }
+        }
+
+        // Inicializa o Gateway no escopo Global de execução segura
+        (window as any).TS_GATEWAY = new TSNeuralGateway();
+        console.log("%c[TypeScript Gateway] Pipeline estrito compilado e acoplado.", "color: #3178c6; font-weight: bold;");
+    </script-ts>
+
+</body>
+</html>
